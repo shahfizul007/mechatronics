@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Page</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+    <h1>Welcome to the Owner</h1>
+
+    <!--===================== Header =====================-->
+    <div class="header">
+        <div class="left-section">
+            <img src="{% static 'my_images/qistiz-logo.jpg' %}" alt="Logo" class="logo">
+            <h1>Balqis Cake & Dessert</h1>
+        </div>
+        <div class="right-section">
+            <h1 id="home-link">Home</h1> 
+            <h1 id="about-link">About</h1> 
+            <h1 id="product-link">Product</h1> 
+            <h1 id="gallery-link">Gallery</h1> 
+            <h1 id="testimony-link">Testimony</h1>
+            
+        </div>
+    </div>
+
+    <!--===================== Order =====================-->
+    <div class="order-section">
+        <h2>Pending Orders</h2>
+        <div class="order-grid">
+            {% if pending_orders %}
+                {% for order in pending_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                    <form action="{% url 'mark_order_received' order.order_id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-received">Received</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!--===================== Kitchen =====================-->
+    <div class="order-section">
+        <h2>Preparing Orders</h2>
+        <div class="order-grid">
+            {% if preparing_orders %}
+                {% for order in preparing_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                    <form action="{% url 'mark_order_received' order.order_id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-received">Done</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--===================== Rider =====================-->
+    <div class="order-section">
+        <h2>Rider Orders</h2>
+        <div class="order-grid">
+            {% if rider_orders %}
+                {% for order in rider_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                    <form action="{% url 'mark_order_received' order.order_id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-received">Arrived</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

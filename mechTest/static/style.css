@@ -30,10 +30,19 @@ body {
     gap: 50px; /* Adds even spacing between Home, About, Product */
 }
 
-/* Style for the contact link to push it to the far right */
+/* Style for the last navigation link to add cart icon after it */
 .right-section h1:last-child {
-    margin-left: auto; /* Pushes Contact to the far right */
-    margin-right: 50px; /* Ensures no extra margin on the right */
+    margin-left: auto; /* Pushes Testimony to the far right */
+    margin-right: 20px; /* Adds space between last link and cart icon */
+}
+
+/* Style for the cart icon */
+.cart-icon {
+    font-size: 30px;
+    cursor: pointer; /* Makes the cart icon clickable */
+    margin-right: 50px; /* Adjusts spacing between the icon and the edge */
+    color: #000; /* Default cart icon color */
+    transition: transform 0.3s, color 0.3s; /* Add smooth transitions */
 }
 
 /* Style for the logo */
@@ -55,11 +64,88 @@ body {
     cursor: pointer; /* Adds a pointer cursor to indicate it's clickable */
 }
 
+/* Hover effect for cart icon */
+.cart-icon:hover {
+    color: #ff6600; /* Change color on hover */
+    transform: scale(1.1); /* Slightly enlarge the cart icon on hover */
+}
+
+/* Optional: Active state when the cart sidebar is open */
+.cart-icon.active {
+    color: #ff6600; /* Change the color when active */
+    transform: rotate(180deg); /* Rotate the cart icon when active */
+}
+
+
 @media only screen and (max-width: 768px) {
     .right-section {
         display: none;
     }
 }
+
+/* ----------------------------------------- Cart Sidebar styling ----------------------------------------- */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Initially hidden off-screen */
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease; /* Smooth slide in/out transition */
+    z-index: 1001; /* Higher than header z-index */
+    padding: 20px;
+}
+
+.cart-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-sidebar-header button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* When the sidebar is visible */
+.cart-sidebar.active {
+    right: 0; /* Bring it into view */
+}
+
+/* Cart items */
+.cart-items {
+    margin-top: 20px;
+}
+
+.cart-sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.cart-btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.confirm-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.clear-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+
 
 
 /* --------------------------- Style for the Products --------------------------- */
@@ -137,4 +223,116 @@ h2 {
 
 .add-to-cart:hover {
     background-color: #218838;
+}
+
+
+
+/* ---------------------------------------
+    Style For Owner.html
+--------------------------------------- */
+
+/* --------------------------- Style for the Order Section --------------------------- */
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Left section: the image */
+.left-section {
+    flex: 1; /* 50% of the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-section img {
+    max-width: 100%; /* Ensure the image scales well */
+    height: auto;
+}
+
+/* Right section: the buttons */
+.right-section {
+    flex: 1; /* 50% of the container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-section div {
+    text-align: center;
+}
+
+/* Style for the buttons */
+.btn {
+    display:inline-block;
+    background-color: #ff99cc;
+    color: #ff99cc;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #e85b9a;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack image and buttons vertically */
+    }
+
+    .left-section, .right-section {
+        flex: unset; /* Reset the flex property for mobile */
+        width: 100%; /* Make each section 100% wide */
+    }
+    
+    .left-section img {
+        width: 80%; /* Adjust image size for mobile */
+    }
+
+    .right-section {
+        padding: 20px;
+    }
+}
+
+.order-section {
+    margin-top: 50px;
+}
+
+.order-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.order-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-details {
+    margin-bottom: 20px;
+}
+
+.btn-received {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-received:hover {
+    background-color: #45a049;
 }

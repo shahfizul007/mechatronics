@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -26,58 +27,258 @@
             <h1 id="about-link">About</h1> 
             <h1 id="product-link">Product</h1> 
             <h1 id="gallery-link">Gallery</h1> 
-            <h1 id="testimony-link">Testimony</h1> 
-            <h1 id="contact-link">Contact</h1>
+            <h1 id="testimony-link">Testimony</h1>
+            
+            <!-- Add cart icon here -->
+            <div class="cart-icon" id="cart-icon">
+                <i class="fas fa-shopping-cart"></i> <!-- Font Awesome cart icon -->
+            </div>
         </div>
     </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-sidebar-header">
+            <h2>Your Cart</h2>
+            <button id="close-sidebar">X</button> <!-- Close button -->
+        </div>
+        <div class="cart-items">
+            <p>No items in the cart</p>
+        </div>
+
+        <!-- Add hidden CSRF token here -->
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+        <div class="cart-sidebar-footer">
+            <button id="confirm-order" class="cart-btn confirm-btn">Confirm</button>
+            <button id="clear-cart" class="cart-btn clear-btn">Clear</button>
+        </div>
+    </div>
+
+
+
+    
 
     <!--===================== Product =====================-->
     <div class="gallery-section" id="gallery-section">
         <h2>Products</h2>
         <div class="gallery-grid">
+            {% for product in products %}
             <div class="gallery-item">
-                <img src="{% static 'my_images/qistiz-cookies.jpg' %}" alt="Gallery Image 1">
+                <img src="{% static 'my_images/' %}{{ product.product_image }}" alt="{{ product.product_name }}">
                 <div class="gallery-info">
-                    <p class="description">Delicious Cookies</p>
-                    <p class="price">$10</p>
-                    <button class="add-to-cart">Add to Cart</button>
+                    <p class="description">{{ product.product_name }}</p>
+                    <p class="price">${{ product.price }}</p>
+                    <button class="add-to-cart" data-product-id="{{ product.product_id }}" data-product-name="{{ product.product_name }}" data-product-price="{{ product.price }}">Add to Cart</button>
                 </div>
             </div>
-            <div class="gallery-item">
-                <img src="{% static 'my_images/qistiz-cheesecake.jpg' %}" alt="Gallery Image 2">
-                <div class="gallery-info">
-                    <p class="description">Creamy Cheesecake</p>
-                    <p class="price">$15</p>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="{% static 'my_images/qistiz-wedding.jpg' %}" alt="Gallery Image 3">
-                <div class="gallery-info">
-                    <p class="description">Wedding Cake</p>
-                    <p class="price">$50</p>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="{% static 'my_images/qistiz-desert.jpg' %}" alt="Gallery Image 4">
-                <div class="gallery-info">
-                    <p class="description">Delicious Dessert</p>
-                    <p class="price">$8</p>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-            </div>
-            <div class="gallery-item">
-                <img src="{% static 'my_images/qistiz-birthday.jpg' %}" alt="Gallery Image 5">
-                <div class="gallery-info">
-                    <p class="description">Birthday Cake</p>
-                    <p class="price">$30</p>
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
+    <!--===================== Progress - Orders Received =====================-->
+    <div class="order-section"></div>
+        <h2>Orders Received ... Preparing Orders</h2>
+        <div class="order-grid">
+            {% if received_orders %}
+                {% for order in received_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--===================== Progress - Orders On The Way =====================-->
+    <div class="order-section"></div>
+        <h2>Orders On The Way</h2>
+        <div class="order-grid">
+            {% if preparing_orders %}
+                {% for order in preparing_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--===================== Progress - Orders Arrived =====================-->
+    <div class="order-section"></div>
+        <h2>Orders Arrived</h2>
+        <div class="order-grid">
+            {% if rider_orders %}
+                {% for order in rider_orders %}
+                <div class="order-box">
+                    <div class="order-details">
+                        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                        <p><strong>Description:</strong> {{ order.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending orders available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle cart sidebar
+        const cartIcon = document.getElementById('cart-icon');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+        const cartItems = document.querySelector('.cart-items');
+        let cartVisible = false;
+        let cart = [];
+    
+        // Toggle Cart Sidebar visibility
+        cartIcon.addEventListener('click', function () {
+            cartVisible = !cartVisible;
+            if (cartVisible) {
+                cartSidebar.classList.add('active'); // Show the cart sidebar
+                cartIcon.innerHTML = '<i class="fas fa-times"></i>'; // Change icon to 'X'
+            } else {
+                cartSidebar.classList.remove('active'); // Hide the cart sidebar
+                cartIcon.innerHTML = '<i class="fas fa-shopping-cart"></i>'; // Change icon back to cart
+            }
+        });
+    
+        // Close sidebar on 'X' button click
+        closeSidebarBtn.addEventListener('click', function () {
+            cartSidebar.classList.remove('active');
+            cartIcon.innerHTML = '<i class="fas fa-shopping-cart"></i>';
+            cartVisible = false;
+        });
+    
+        // JavaScript to handle adding items to the cart
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+                const productName = this.dataset.productName;
+                const productPrice = parseFloat(this.dataset.productPrice); // Convert price to number
+    
+                // Check if product is already in cart
+                const existingProduct = cart.find(item => item.id === productId);
+                if (!existingProduct) {
+                    // Add new product to cart
+                    cart.push({ id: productId, name: productName, price: productPrice });
+                }
+    
+                // Update cart sidebar
+                updateCartSidebar();
+            });
+        });
+    
+        // Function to update the cart sidebar with the cart items
+        function updateCartSidebar() {
+            let cartHTML = '';
+            let total = 0;
+    
+            if (cart.length > 0) {
+                cart.forEach(item => {
+                    cartHTML += `<p>${item.name} - $${item.price.toFixed(2)}</p>`;
+                    total += item.price;
+                });
+                cartHTML += `<p><strong>Total: $${total.toFixed(2)}</strong></p>`;
+            } else {
+                cartHTML = '<p>No items in the cart</p>';
+            }
+            cartItems.innerHTML = cartHTML;
+        }
+    
+        // Confirm Order button logic
+        const confirmOrderButton = document.getElementById('confirm-order');
+        confirmOrderButton.addEventListener('click', function () {
+            if (cart.length > 0) {
+                const productNames = cart.map(item => item.name).join(', ');
+                const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch('/confirm-order/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        product_names: productNames,
+                        total: total
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to confirm order');
+                    }
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Order confirmed!');
+                        cart = []; // Clear the cart after confirmation
+                        updateCartSidebar();
+                        window.location.href = "/home/"; // Redirect to home page
+                    } else {
+                        alert('Failed to confirm order.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                alert('No items in the cart to confirm.');
+            }
+        });
+
+    
+        // Clear Cart button logic
+        const clearCartButton = document.getElementById('clear-cart');
+        clearCartButton.addEventListener('click', function() {
+            cart = []; // Clear the cart
+            updateCartSidebar(); // Update the cart display
+        });
+
+        document.getElementById('confirm-order').addEventListener('click', function () {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const orderData = {
+                cart: cart,  // Assuming 'cart' contains the products added to the cart
+                total: calculateTotal(cart),  // Assuming you have a function to calculate total
+            };
+
+            fetch('/confirm-order/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())  // Parse the JSON response
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = data.redirect;  // Redirect to the home page
+                } else {
+                    console.error('Error submitting order');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+    
+    
 
 </body>
 </html>
