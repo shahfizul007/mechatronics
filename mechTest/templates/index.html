@@ -23,7 +23,9 @@
             <h1>Balqis Cake & Dessert</h1>
         </div>
         <div class="right-section">
-            <h1 id="home-link">Home</h1> 
+            <a href="{% url 'home' %}">
+                <h1 id="home-link">Home</h1> 
+            </a>
             <h1 id="about-link">About</h1> 
             <h1 id="product-link">Product</h1> 
             <h1 id="gallery-link">Gallery</h1> 
@@ -134,6 +136,9 @@
     </div>
 
     <script>
+        document.getElementById('home-link').addEventListener('click', function() {
+        window.location.href = 'home.html';  // Redirect to home.html
+        });
         // JavaScript to toggle cart sidebar
         const cartIcon = document.getElementById('cart-icon');
         const cartSidebar = document.getElementById('cart-sidebar');
